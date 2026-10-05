@@ -1,0 +1,55 @@
+:root {
+    --municipal-primary: #155e75;
+    --municipal-dark: #0f3d56;
+    --municipal-accent: #0891b2;
+    --municipal-light: #e0f2fe;
+    --municipal-sand: #f8f5ee;
+    --municipal-gold: #d4a72c;
+    --municipal-text: #334155;
+    --municipal-muted: #64748b;
+}
+
+body {
+    background: #f8fafc;
+    color: var(--municipal-text);
+    font-family: Inter, "Segoe UI", sans-serif;
+}
+
+.municipal-navbar { background: var(--municipal-dark); box-shadow: 0 4px 16px rgb(15 61 86 / 18%); }
+.navbar-brand, .nav-link { color: #fff; }
+.navbar-brand:hover, .nav-link:hover { color: #bae6fd; }
+.navbar-brand small { display: block; color: #bae6fd; font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; }
+.brand-mark { color: var(--municipal-gold); font-size: 2rem; line-height: 1; }
+.navbar-toggler { border-color: rgb(255 255 255 / 35%); }
+.navbar-toggler-icon { filter: brightness(0) invert(1); }
+.site-main { min-height: calc(100vh - 132px); padding: 3rem 0; }
+.site-footer { background: var(--municipal-dark); color: #dbeafe; padding: 1.25rem 0; font-size: .85rem; }
+.hero { background: linear-gradient(135deg, var(--municipal-dark), var(--municipal-primary)); border-radius: 1rem; color: #fff; padding: 2.5rem; box-shadow: 0 12px 28px rgb(15 61 86 / 14%); }
+.hero p { color: #dbeafe; }
+.section-card, .detail-card, .form-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 1rem; box-shadow: 0 8px 24px rgb(15 61 86 / 7%); }
+.section-card { overflow: hidden; }
+.table thead th { background: var(--municipal-primary); color: #fff; border: 0; font-weight: 600; padding: 1rem; }
+.table tbody td { padding: 1rem; vertical-align: middle; }
+.table tbody tr:nth-child(even) { background: #f8fafc; }
+.table tbody tr:hover { background: var(--municipal-light); }
+.badge-status { border-radius: 999px; font-weight: 600; padding: .45rem .75rem; }
+.status-pendiente { background: #fef3c7; color: #92400e; }
+.status-proceso { background: #dbeafe; color: #1e40af; }
+.status-resuelto { background: #dcfce7; color: #166534; }
+.btn-municipal { background: var(--municipal-accent); border-color: var(--municipal-accent); color: #fff; }
+.btn-municipal:hover { background: var(--municipal-primary); border-color: var(--municipal-primary); color: #fff; }
+.btn-gold { background: var(--municipal-gold); border-color: var(--municipal-gold); color: #fff; }
+.btn-gold:hover { background: #b88916; border-color: #b88916; color: #fff; }
+.page-eyebrow { color: var(--municipal-accent); font-size: .8rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.detail-label { color: var(--municipal-muted); font-size: .8rem; font-weight: 700; text-transform: uppercase; }
+.detail-value { color: var(--municipal-dark); font-size: 1.05rem; }
+.form-card { max-width: 850px; margin: 0 auto; }
+.form-label { color: var(--municipal-dark); font-weight: 600; }
+.form-control, .form-select { border-color: #cbd5e1; border-radius: .6rem; padding: .7rem .85rem; }
+.form-control:focus, .form-select:focus { border-color: var(--municipal-accent); box-shadow: 0 0 0 .2rem rgb(8 145 178 / 15%); }
+
+@media (max-width: 575.98px) {
+    .site-main { padding: 1.5rem 0; }
+    .hero { padding: 1.5rem; }
+    .hero h1 { font-size: 1.8rem; }
+}

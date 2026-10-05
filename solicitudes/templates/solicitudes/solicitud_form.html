@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Registrar solicitud | La Serena{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="form-card p-4 p-md-5">
+        <div class="mb-4">
+            <div class="page-eyebrow">Gestión vecinal</div>
+            <h1 class="h2 mt-2">Registrar Solicitud Vecinal</h1>
+            <p class="text-muted mb-0">Ingrese los antecedentes del ciudadano y su requerimiento.</p>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            {% if form.errors %}
+                <div class="alert alert-danger" role="alert">
+                    <strong>Revise los datos ingresados.</strong>
+                    {{ form.non_field_errors }}
+                    {% for field in form %}{% for error in field.errors %}<div>{{ field.label }}: {{ error }}</div>{% endfor %}{% endfor %}
+                </div>
+            {% endif %}
+            <div class="row g-3">
+                {% for field in form %}
+                <div class="{% if field.name == 'direccion' or field.name == 'descripcion_problema' or field.name == 'delegacion' %}col-12{% else %}col-md-6{% endif %}">
+                    {{ field.label_tag }}
+                    {{ field }}
+                </div>
+                {% endfor %}
+            </div>
+            <div class="mt-4 d-flex flex-wrap justify-content-end gap-2">
+                <a href="{% url 'solicitudes:lista' %}" class="btn btn-outline-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-municipal">Guardar solicitud</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

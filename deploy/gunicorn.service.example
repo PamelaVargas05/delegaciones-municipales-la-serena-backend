@@ -1,0 +1,15 @@
+[Unit]
+Description=Gunicorn service for Delegaciones Municipales
+After=network.target
+
+[Service]
+User=ec2-user
+Group=nginx
+WorkingDirectory=/var/www/negocio
+Environment="DJANGO_SETTINGS_MODULE=config.settings"
+ExecStart=/var/www/negocio/venv/bin/gunicorn --workers 3 --bind unix:/var/www/negocio/gunicorn.sock config.wsgi:application
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

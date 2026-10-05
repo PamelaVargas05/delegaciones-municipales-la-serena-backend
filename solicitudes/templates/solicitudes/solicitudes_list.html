@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Solicitudes vecinales | La Serena{% endblock %}
+{% block content %}
+<div class="container">
+    <section class="hero mb-4">
+        <div class="page-eyebrow text-info-emphasis">Gestión vecinal</div>
+        <h1 class="display-6 fw-bold mt-2">Solicitudes Vecinales</h1>
+        <p class="lead mb-0">Gestión y seguimiento de requerimientos ciudadanos.</p>
+    </section>
+
+    <section class="section-card">
+        <div class="p-3 p-md-4 border-bottom">
+            <div class="d-flex flex-column flex-lg-row gap-3 justify-content-between">
+                <a href="{% url 'solicitudes:crear' %}" class="btn btn-municipal">+ Nueva solicitud</a>
+                <form class="row g-2 flex-grow-1 justify-content-end" method="get">
+                    <div class="col-12 col-md-5">
+                        <label class="visually-hidden" for="search">Buscar</label>
+                        <input id="search" class="form-control" type="search" name="q" value="{{ q }}" placeholder="Buscar por folio, RUT o ciudadano">
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label class="visually-hidden" for="delegacion">Filtro por delegación</label>
+                        <select id="delegacion" class="form-select" name="delegacion">
+                            <option value="">Todas las delegaciones</option>
+                            {% for delegacion in delegaciones %}
+                                <option value="{{ delegacion.id }}" {% if delegacion_id == delegacion.id|stringformat:"s" %}selected{% endif %}>{{ delegacion.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-auto">
+                        <button class="btn btn-municipal w-100" type="submit">Buscar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr><th>Folio</th><th>Ciudadano</th><th>RUT</th><th>Delegación</th><th>Estado</th><th>Fecha de ingreso</th><th>Acciones</th></tr>
+                </thead>
+                <tbody>
+                    {% for solicitud in solicitudes %}
+                    <tr>
+                        <td class="fw-bold">{{ solicitud.folio }}</td>
+                        <td>{{ solicitud.nombre_ciudadano }}</td>
+                        <td>{{ solicitud.rut }}</td>
+                        <td>{{ solicitud.delegacion.nombre }}</td>
+                        <td>
+                            {% if solicitud.estado == 'Pendiente' %}<span class="badge badge-status status-pendiente">Pendiente</span>
+                            {% elif solicitud.estado == 'En Proceso' %}<span class="badge badge-status status-proceso">En Proceso</span>
+                            {% elif solicitud.estado == 'Resuelto' %}<span class="badge badge-status status-resuelto">Resuelto</span>
+                            {% else %}<span class="badge bg-secondary">{{ solicitud.get_estado_display }}</span>{% endif %}
+                        </td>
+                        <td>{{ solicitud.fecha_ingreso|date:'d/m/Y H:i' }}</td>
+                        <td>
+                            <div class="d-flex flex-wrap gap-1">
+                                <a href="{% url 'solicitudes:detalle' solicitud.pk %}" class="btn btn-sm btn-outline-primary">Ver</a>
+                                <a href="#" class="btn btn-sm btn-warning">Modificar</a>
+                                <a href="#" class="btn btn-sm btn-outline-danger">Eliminar</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="7" class="text-center text-muted py-5">No se encontraron solicitudes registradas.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+{% endblock %}

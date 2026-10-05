@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Unidad de Delegaciones Municipales{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg municipal-navbar">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-3" href="{% url 'solicitudes:lista' %}">
+                <span class="brand-mark" aria-hidden="true">⌂</span>
+                <span><strong>Unidad de Delegaciones Municipales</strong><small>La Serena</small></span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Abrir navegación">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <div class="navbar-nav ms-auto">
+                    <a class="nav-link" href="{% url 'solicitudes:lista' %}">Solicitudes</a>
+                    <a class="nav-link" href="{% url 'solicitudes:crear' %}">Nueva solicitud</a>
+                    <a class="nav-link" href="{% url 'admin:index' %}">Administración</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="site-main">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container d-flex flex-wrap justify-content-between gap-2">
+            <span>Unidad de Delegaciones Municipales de La Serena</span>
+            <span>Sistema de Gestión Vecinal &middot; {% now "Y" %}</span>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

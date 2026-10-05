@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Detalle de solicitud | La Serena{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div><div class="page-eyebrow">Gestión vecinal</div><h1 class="h2 mb-0">Detalle de solicitud</h1></div>
+        <a href="{% url 'solicitudes:lista' %}" class="btn btn-outline-secondary">← Volver al listado</a>
+    </div>
+    <article class="detail-card p-4 p-md-5">
+        <div class="d-flex flex-wrap justify-content-between gap-3 border-bottom pb-4 mb-4">
+            <div><div class="detail-label">Folio</div><div class="detail-value fw-bold">{{ solicitud.folio }}</div></div>
+            <div><div class="detail-label">Estado</div><div class="mt-1"><span class="badge badge-status {% if solicitud.estado == 'Pendiente' %}status-pendiente{% elif solicitud.estado == 'En Proceso' %}status-proceso{% elif solicitud.estado == 'Resuelto' %}status-resuelto{% endif %}">{{ solicitud.get_estado_display }}</span></div></div>
+            <div><div class="detail-label">Fecha de ingreso</div><div class="detail-value">{{ solicitud.fecha_ingreso|date:'d/m/Y H:i' }}</div></div>
+        </div>
+        <h2 class="h5 text-primary mb-3">Información del ciudadano</h2>
+        <div class="row g-4 mb-4">
+            <div class="col-md-6"><div class="detail-label">Nombre</div><div class="detail-value">{{ solicitud.nombre_ciudadano }}</div></div>
+            <div class="col-md-6"><div class="detail-label">RUT</div><div class="detail-value">{{ solicitud.rut }}</div></div>
+            <div class="col-12"><div class="detail-label">Dirección</div><div class="detail-value">{{ solicitud.direccion }}</div></div>
+        </div>
+        <h2 class="h5 text-primary mb-3">Problema reportado</h2>
+        <div class="p-3 rounded-3 mb-4" style="background: var(--municipal-sand);">{{ solicitud.descripcion_problema|linebreaksbr }}</div>
+        <h2 class="h5 text-primary mb-3">Delegación responsable</h2>
+        <div class="detail-value">{{ solicitud.delegacion.nombre }}</div>
+    </article>
+</div>
+{% endblock %}
