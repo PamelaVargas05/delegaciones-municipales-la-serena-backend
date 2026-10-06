@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0">Módulo de Delegaciones</h4>
+    <!-- Botón Agregar -->
+    <a href="#" class="btn btn-success" onclick="alert('Módulo editable desde Django Admin'); return false;">
+        <i class="bi bi-plus-lg me-1"></i> Agregar Delegación
+    </a>
+</div>
+
+<div class="row g-4">
+    {% for del in delegaciones %}
+    <div class="col-md-6 col-lg-4">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h5 class="card-title text-primary fw-bold">{{ del.nombre }}</h5>
+                    {% if del.activa %}
+                        <span class="badge bg-success">Activa</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Inactiva</span>
+                    {% endif %}
+                </div>
+                <p class="card-text text-muted mb-1">
+                    <i class="bi bi-geo-alt"></i> {{ del.direccion }}
+                </p>
+                <p class="card-text text-muted mb-3">
+                    <i class="bi bi-telephone"></i> {{ del.telefono|default:"Sin teléfono" }}
+                </p>
+
+                <h6 class="fw-bold border-bottom pb-1">Encargado / Funcionarios Asociados:</h6>
+                <ul class="list-unstyled small mb-3">
+                    {% for f in del.funcionarios.all %}
+                        <li><i class="bi bi-person me-1"></i> {{ f.nombre_completo }} - <em>{{ f.cargo }}</em></li>
+                    {% empty %}
+                        <li class="text-muted">Sin funcionarios registrados.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="card-footer bg-white border-top-0 d-flex justify-content-end gap-2">
+                <!-- Botón Modificar y Botón Eliminar -->
+                <a href="#" class="btn btn-sm btn-outline-warning" onclick="alert('Módulo editable desde Django Admin'); return false;">
+                    <i class="bi bi-pencil"></i> Modificar
+                </a>
+                <a href="#" class="btn btn-sm btn-outline-danger" onclick="alert('Módulo editable desde Django Admin'); return false;">
+                    <i class="bi bi-trash"></i> Eliminar
+                </a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info">No existen delegaciones registradas.</div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

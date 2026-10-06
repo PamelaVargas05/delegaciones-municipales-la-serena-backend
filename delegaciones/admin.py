@@ -5,7 +5,7 @@ from .models import Delegacion, Meta
 
 @admin.register(Delegacion)
 class DelegacionAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'direccion', 'telefono', 'encargado')
+    list_display = ('id', 'nombre', 'direccion', 'telefono', 'encargado')
     search_fields = ('nombre', 'direccion', 'telefono', 'encargado')
     ordering = ('nombre',)
 

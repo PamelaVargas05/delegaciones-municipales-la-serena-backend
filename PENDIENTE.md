@@ -291,11 +291,11 @@ Nginx                 ✅
 Frontend solicitudes  ✅
 phpMyAdmin            ✅
 
-Frontend delegaciones ⬜
-CRUD Admin final      ⬜
+Frontend delegaciones ⬜ se creo views.py / agregue ruta lista_delegaciones al urls.py / agregue el enlace al base.html 
+CRUD Admin final      ⬜ / nose si falta algo mas 
 DEBUG=False           ⬜
 Capturas entrega      ⬜
-Documento técnico     ⬜
+Documento técnico     ⬜ / lo hago yo ahora 
 Presentación final    ⬜
 
 
@@ -307,3 +307,6 @@ git commit -m "docs: agregar pendientes para continuidad del proyecto"
 git push
 
 Los prompts eso despues de te mando captura jeje avisame cualquier cosa, igual te lo deje casi listo, son cosas simples que faltan modifaciones como el frontend para que se vea mas bonitos y el crud pero no se si habia que hacerlo por eso lo deje como pendiente
+
+
+Te detalle los cambios que le hice, el CRUD ni lo toque (creo), si me mande una caga avisame :p
