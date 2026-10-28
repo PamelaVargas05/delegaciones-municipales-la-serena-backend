@@ -1,0 +1,30 @@
+{% extends 'base.html' %} 
+{% block content %} 
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <h3 class="text-center mb-4">Iniciar Sesión</h3>
+                
+                {% if form.errors %}  
+                    <div class="alert alert-danger" role="alert">
+                        Usuario o contraseña incorrectos. Por favor, reintenta.  
+                    </div>
+                {% endif %}   
+
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="d-grid gap-2 mt-3">
+                        <button type="submit" class="btn btn-primary">Ingresar</button>
+                    </div>
+                </form>
+
+                <div class="text-center mt-3">
+                    <a href="{% url 'password_reset' %}">¿Olvidaste tu contraseña?</a> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

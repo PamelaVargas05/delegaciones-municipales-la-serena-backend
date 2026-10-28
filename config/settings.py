@@ -89,3 +89,11 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+LOGIN_REDIRECT_URL = 'solicitudes:lista'  
+LOGOUT_REDIRECT_URL = 'login'             
+LOGIN_URL = 'login'                       
+
+# Backend de Email para consola (para ver los tokens de recuperación de clave en la terminal)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
