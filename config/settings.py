@@ -95,5 +95,14 @@ LOGIN_REDIRECT_URL = 'solicitudes:lista'
 LOGOUT_REDIRECT_URL = 'login'             
 LOGIN_URL = 'login'                       
 
-# Backend de Email para consola (para ver los tokens de recuperación de clave en la terminal)
+# Backend de correo SMTP real para Gmail
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+#EMAIL_HOST = 'smtp.gmail.com'
+#EMAIL_PORT = 587
+#EMAIL_USE_TLS = True
+#EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'tu_correo_municipal@gmail.com')
+#EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'tu_contrasena_de_aplicacion')
+#DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# Muestra los correos impresos en la terminal de VS Code de forma instantánea
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

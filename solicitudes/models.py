@@ -1,6 +1,9 @@
+import random
+import datetime
 from django.db import models
+from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
-
+from django.utils import timezone
 from delegaciones.models import Delegacion
 
 
@@ -58,4 +61,17 @@ class Vecino(models.Model):
 
 
 Solicitud = SolicitudVecinal
+
+class CodigoRecuperacion(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='codigos_recuperacion')
+    codigo = models.CharField(max_length=6)
+    creado_en = models.DateTimeField(auto_now_add=True)
+
+    def es_valido(self):
+        return timezone.now() <= self.creado_en + datetime.timedelta(minutes=15)
+
+    @classmethod
+    def generar_codigo(cls, user):
+        codigo_num = f"{random.randint(100000, 999999)}"
+        return cls.objects.create(user=user, codigo=codigo_num)
 
