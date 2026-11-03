@@ -1,5 +1,5 @@
 from django import forms
-
+from .models import Vecino
 from .models import SolicitudVecinal
 
 
@@ -23,4 +23,15 @@ class SolicitudVecinalForm(forms.ModelForm):
             'descripcion_problema': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Describe el problema'}),
             'estado': forms.Select(attrs={'class': 'form-select'}),
             'delegacion': forms.Select(attrs={'class': 'form-select'}),
+        }
+
+
+
+class VecinoForm(forms.ModelForm):
+    class Meta:
+        model = Vecino
+        fields = ['rut', 'nombre']
+        widgets = {
+            'rut': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '12.345.678-9'}),
+            'nombre': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nombre completo del vecino'}),
         }

@@ -8,6 +8,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from delegaciones.models import Delegacion
 from .forms import SolicitudVecinalForm
 from .models import CodigoRecuperacion, SolicitudVecinal
+from .models import Vecino
+from .forms import VecinoForm
 
 
 
@@ -166,3 +168,51 @@ def nueva_contrasena_view(request):
             return redirect('login')
 
     return render(request, 'registration/nueva_contrasena.html')
+
+
+@login_required
+@permission_required('solicitudes.view_vecino', raise_exception=True)
+def lista_vecinos(request):
+    query = request.GET.get('q', '')
+    if query:
+        vecinos = Vecino.objects.filter(Q(rut__icontains=query) | Q(nombre__icontains=query))
+    else:
+        vecinos = Vecino.objects.all()
+    return render(request, 'solicitudes/vecinos_list.html', {'vecinos': vecinos, 'query': query})
+
+@login_required
+@permission_required('solicitudes.add_vecino', raise_exception=True)
+def crear_vecino(request):
+    if request.method == 'POST':
+        form = VecinoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Vecino registrado exitosamente.')
+            return redirect('solicitudes:lista_vecinos')
+    else:
+        form = VecinoForm()
+    return render(request, 'solicitudes/vecino_form.html', {'form': form, 'titulo': 'Registrar Vecino'})
+
+@login_required
+@permission_required('solicitudes.change_vecino', raise_exception=True)
+def editar_vecino(request, pk):
+    vecino = get_object_or_404(Vecino, pk=pk)
+    if request.method == 'POST':
+        form = VecinoForm(request.POST, instance=vecino)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Datos del vecino actualizados.')
+            return redirect('solicitudes:lista_vecinos')
+    else:
+        form = VecinoForm(instance=vecino)
+    return render(request, 'solicitudes/vecino_form.html', {'form': form, 'titulo': 'Editar Vecino'})
+
+@login_required
+@permission_required('solicitudes.delete_vecino', raise_exception=True)
+def eliminar_vecino(request, pk):
+    vecino = get_object_or_404(Vecino, pk=pk)
+    if request.method == 'POST':
+        vecino.delete()
+        messages.success(request, 'Vecino eliminado de la base de datos.')
+        return redirect('solicitudes:lista_vecinos')
+    return render(request, 'solicitudes/vecino_confirm_delete.html', {'vecino': vecino})
