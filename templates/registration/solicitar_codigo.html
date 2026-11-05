@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Recuperar contraseña{% endblock %}
+{% block content %}
+<div class="row justify-content-center"><div class="col-md-6 col-lg-5"><div class="form-card p-4 p-md-5">
+    <div class="page-eyebrow">Acceso seguro</div>
+    <h1 class="page-title h2 mt-2">Recuperar contraseña</h1>
+    <p class="page-subtitle mb-4">Ingresa el correo asociado a tu cuenta. Te enviaremos un código de verificación de 6 dígitos.</p>
+    <form method="post">{% csrf_token %}<div class="mb-3"><label for="id_email" class="form-label">Correo electrónico</label><input id="id_email" type="email" name="email" class="form-control" required autocomplete="email"></div><button type="submit" class="btn btn-municipal w-100">Enviar código</button></form>
+    <div class="text-center mt-4"><a href="{% url 'login' %}" class="btn btn-link">← Volver al login</a></div>
+</div></div></div>
+{% endblock %}

@@ -167,15 +167,18 @@ def eliminar_tipo(request, pk):
 
 def solicitar_codigo_view(request):
     if request.method == 'POST':
-        email = request.POST.get('email', '').strip()
-        try:
-            user = User.objects.get(email=email)
+        email = request.POST.get('email', '').strip().lower()
+        user = User.objects.filter(email__iexact=email, is_active=True).first()
+        if user:
             codigo_obj = CodigoRecuperacion.generar_codigo(user)
-            asunto = 'Código de Verificación - Recuperación de Contraseña'
+            asunto = 'Código de recuperación - Delegaciones Municipales'
+            enlace = request.build_absolute_uri('/solicitudes/recuperar/verificar/')
             mensaje = (
                 f'Hola {user.username},\n\n'
-                f'Tu código de verificación para cambiar la contraseña es: {codigo_obj.codigo}\n\n'
-                f'Este código vencerá en 15 minutos.'
+                f'Tu código de verificación es:\n\n{codigo_obj.codigo}\n\n'
+                'Este código es válido durante 15 minutos.\n\n'
+                f'Para continuar con la recuperación puedes ingresar aquí:\n{enlace}\n\n'
+                'Si no solicitaste este cambio, ignora este mensaje.'
             )
             send_mail(
                 asunto,
@@ -184,15 +187,12 @@ def solicitar_codigo_view(request):
                 [user.email],
             )
             request.session['email_recuperacion'] = user.email
-            messages.success(
-                request, f'Se ha enviado un código de 6 dígitos a {user.email}'
-            )
+        messages.success(
+            request,
+            'Si el correo está asociado a una cuenta activa, recibirás un código de verificación.',
+        )
+        if user:
             return redirect('solicitudes:verificar_codigo')
-        except User.DoesNotExist:
-            messages.error(
-                request,
-                'No existe ninguna cuenta asociada a este correo electrónico.',
-            )
     return render(request, 'registration/solicitar_codigo.html')
 
 
@@ -203,26 +203,15 @@ def verificar_codigo_view(request):
 
     if request.method == 'POST':
         codigo_ingresado = request.POST.get('codigo', '').strip()
-        try:
-            user = User.objects.get(email=email)
+        user = User.objects.filter(email__iexact=email, is_active=True).first()
+        if user and len(codigo_ingresado) == 6 and codigo_ingresado.isdigit():
             ultimo_codigo = CodigoRecuperacion.objects.filter(
                 user=user
-            ).latest('creado_en')
-            if (
-                ultimo_codigo.codigo == codigo_ingresado
-                and ultimo_codigo.es_valido()
-            ):
+            ).order_by('-creado_en').first()
+            if ultimo_codigo and ultimo_codigo.codigo == codigo_ingresado and ultimo_codigo.es_valido():
                 request.session['codigo_verificado'] = True
                 return redirect('solicitudes:nueva_contrasena')
-            else:
-                messages.error(
-                    request,
-                    'El código es incorrecto o ha expirado (dura 15 min).',
-                )
-        except (User.DoesNotExist, CodigoRecuperacion.DoesNotExist):
-            messages.error(
-                request, 'Ocurrió un error. Solicita un nuevo código.'
-            )
+        messages.error(request, 'Código incorrecto o expirado.')
 
     return render(
         request, 'registration/verificar_codigo.html', {'email': email}
@@ -247,11 +236,15 @@ def nueva_contrasena_view(request):
         elif pass1 != pass2:
             messages.error(request, 'Las contraseñas no coinciden.')
         else:
-            user = User.objects.get(email=email)
+            user = User.objects.filter(email__iexact=email, is_active=True).first()
+            if not user:
+                messages.error(request, 'No fue posible completar la recuperación.')
+                return redirect('solicitudes:solicitar_codigo')
             user.set_password(pass1)
             user.save()
-            del request.session['email_recuperacion']
-            del request.session['codigo_verificado']
+            CodigoRecuperacion.objects.filter(user=user).delete()
+            request.session.pop('email_recuperacion', None)
+            request.session.pop('codigo_verificado', None)
             messages.success(
                 request,
                 '¡Contraseña actualizada con éxito! Ya puedes iniciar sesión.',

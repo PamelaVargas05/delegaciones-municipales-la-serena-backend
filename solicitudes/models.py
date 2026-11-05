@@ -1,4 +1,4 @@
-import random
+import secrets
 import datetime
 from django.db import models
 from django.contrib.auth.models import User
@@ -110,5 +110,6 @@ class CodigoRecuperacion(models.Model):
 
     @classmethod
     def generar_codigo(cls, user):
-        codigo_num = f"{random.randint(100000, 999999)}"
+        cls.objects.filter(user=user).delete()
+        codigo_num = f"{secrets.randbelow(1000000):06d}"
         return cls.objects.create(user=user, codigo=codigo_num)

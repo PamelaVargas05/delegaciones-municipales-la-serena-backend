@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Verificar código{% endblock %}
+{% block content %}
+<div class="row justify-content-center"><div class="col-md-6 col-lg-5"><div class="form-card p-4 p-md-5 text-center">
+    <div class="page-eyebrow">Acceso seguro</div>
+    <h1 class="page-title h2 mt-2">Verificar código</h1>
+    <p class="page-subtitle mb-4">Hemos enviado un código de 6 dígitos al correo asociado a tu cuenta.</p>
+    <form method="post">{% csrf_token %}<label for="id_codigo" class="form-label">Código de verificación</label><input id="id_codigo" type="text" name="codigo" class="form-control text-center fs-4 letter-spacing-wide" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" autocomplete="one-time-code" required><button type="submit" class="btn btn-municipal w-100 mt-4">Verificar código</button></form>
+    <div class="d-flex flex-wrap justify-content-center gap-2 mt-4"><a href="{% url 'login' %}" class="btn btn-link">Volver al login</a><a href="{% url 'solicitudes:solicitar_codigo' %}" class="btn btn-link">Solicitar un nuevo código</a></div>
+</div></div></div>
+{% endblock %}

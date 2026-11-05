@@ -72,6 +72,7 @@ body {
 .form-label { color: var(--municipal-dark); font-weight: 600; }
 .form-control, .form-select { border-color: #cbd5e1; border-radius: .6rem; padding: .7rem .85rem; }
 .form-control:focus, .form-select:focus { border-color: var(--municipal-accent); box-shadow: 0 0 0 .2rem rgb(8 145 178 / 15%); }
+.letter-spacing-wide { letter-spacing: .35em; }
 
 @media (max-width: 575.98px) {
     .site-main { padding: 1.5rem 0 2.5rem; }
