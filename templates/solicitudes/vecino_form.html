@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h1 class="h3 mb-4">{{ titulo }}</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a href="{% url 'solicitudes:lista_vecinos' %}" class="btn btn-outline-secondary">Volver</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
