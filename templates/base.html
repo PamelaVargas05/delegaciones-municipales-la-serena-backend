@@ -10,7 +10,7 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg municipal-navbar">
-        <div class="container">
+        <div class="container-xl px-3 px-md-4">
             <a class="navbar-brand d-flex align-items-center gap-3" href="{% url 'dashboard' %}">
                 <span class="brand-mark" aria-hidden="true">⌂</span>
                 <span><strong>Unidad de Delegaciones Municipales</strong><small>La Serena</small></span>
@@ -33,11 +33,13 @@
     </nav>
 
     <main class="site-main">
-        {% block content %}{% endblock %}
+        <div class="container-xl px-3 px-md-4">
+            {% block content %}{% endblock %}
+        </div>
     </main>
 
     <footer class="site-footer">
-        <div class="container d-flex flex-wrap justify-content-between gap-2">
+        <div class="container-xl px-3 px-md-4 d-flex flex-wrap justify-content-between gap-2">
             <span>Unidad de Delegaciones Municipales de La Serena</span>
             <span>Sistema de Gestión Vecinal &middot; {% now "Y" %}</span>
         </div>

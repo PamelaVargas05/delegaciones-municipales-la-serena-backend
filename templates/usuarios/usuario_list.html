@@ -1,4 +1,11 @@
-{% extends 'base.html' %}{% block content %}
-<h1 class="h3">Usuarios</h1><form class="mb-3"><input name="q" value="{{ query }}" placeholder="Buscar" class="form-control"></form><a class="btn btn-success mb-3" href="{% url 'usuarios:crear' %}">Nuevo usuario</a>
-<table class="table"><tr><th>Usuario</th><th>Nombre</th><th>Roles</th><th></th></tr>{% for usuario in usuarios %}<tr><td>{{ usuario.username }}</td><td>{{ usuario.get_full_name }}</td><td>{% for group in usuario.groups.all %}{{ group.name }} {% endfor %}</td><td><a href="{% url 'usuarios:editar' usuario.pk %}">Editar</a> <a href="{% url 'usuarios:eliminar' usuario.pk %}">Eliminar</a></td></tr>{% endfor %}</table>
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header"><div><h1 class="page-title">Usuarios</h1><p class="page-subtitle">Administra las cuentas y roles del sistema.</p></div><div class="page-actions"><a class="btn btn-success" href="{% url 'usuarios:crear' %}">Nuevo usuario</a></div></div>
+<section class="section-card">
+    <form class="row g-2 search-row" method="get"><div class="col-12 col-md"><input name="q" value="{{ query }}" placeholder="Buscar usuarios" class="form-control"></div><div class="col-12 col-md-auto"><button type="submit" class="btn btn-municipal w-100">Buscar</button></div></form>
+    <div class="table-responsive"><table class="table"><thead><tr><th>Usuario</th><th>Nombre</th><th>Roles</th><th>Acciones</th></tr></thead><tbody>
+    {% for usuario in usuarios %}<tr><td>{{ usuario.username }}</td><td>{{ usuario.get_full_name }}</td><td>{% for group in usuario.groups.all %}<span class="badge text-bg-light me-1">{{ group.name }}</span>{% empty %}<span class="text-muted">Sin roles</span>{% endfor %}</td><td><div class="actions"><a class="btn btn-sm btn-outline-primary" href="{% url 'usuarios:editar' usuario.pk %}">Editar</a><a class="btn btn-sm btn-outline-danger" href="{% url 'usuarios:eliminar' usuario.pk %}">Eliminar</a></div></td></tr>
+    {% empty %}<tr><td colspan="4" class="text-center text-muted py-4">No existen usuarios registrados.</td></tr>{% endfor %}
+    </tbody></table></div>
+</section>
 {% endblock %}
