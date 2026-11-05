@@ -1,6 +1,5 @@
 from django import forms
-from .models import Vecino
-from .models import SolicitudVecinal
+from .models import AtencionSolicitud, TipoSolicitud, Vecino, SolicitudVecinal
 
 
 class SolicitudVecinalForm(forms.ModelForm):
@@ -14,6 +13,7 @@ class SolicitudVecinalForm(forms.ModelForm):
             'descripcion_problema',
             'estado',
             'delegacion',
+            'tipo_solicitud',
         ]
         widgets = {
             'folio': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: DS-001'}),
@@ -34,4 +34,25 @@ class VecinoForm(forms.ModelForm):
         widgets = {
             'rut': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '12.345.678-9'}),
             'nombre': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nombre completo del vecino'}),
+        }
+
+
+class TipoSolicitudForm(forms.ModelForm):
+    class Meta:
+        model = TipoSolicitud
+        fields = ['nombre', 'descripcion', 'activo']
+        widgets = {
+            'nombre': forms.TextInput(attrs={'class': 'form-control'}),
+            'descripcion': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'activo': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+
+
+class AtencionSolicitudForm(forms.ModelForm):
+    class Meta:
+        model = AtencionSolicitud
+        fields = ['descripcion', 'estado']
+        widgets = {
+            'descripcion': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+            'estado': forms.Select(attrs={'class': 'form-select'}),
         }

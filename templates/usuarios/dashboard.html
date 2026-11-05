@@ -1,0 +1,4 @@
+{% extends 'base.html' %}{% block content %}
+<h1 class="h3 mb-4">Dashboard{% if user.groups.all %} - {{ user.groups.all.0.name }}{% endif %}</h1>
+<div class="row g-3"><div class="col-md-4"><div class="card p-3">Delegaciones: <strong>{{ delegaciones_count }}</strong></div></div><div class="col-md-4"><div class="card p-3">Solicitudes: <strong>{{ solicitudes_count }}</strong></div></div><div class="col-md-4"><div class="card p-3">Pendientes: <strong>{{ pendientes_count }}</strong></div></div></div>
+{% endblock %}

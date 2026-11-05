@@ -1,0 +1,4 @@
+{% extends 'base.html' %}{% block content %}
+<h1 class="h3">Usuarios</h1><form class="mb-3"><input name="q" value="{{ query }}" placeholder="Buscar" class="form-control"></form><a class="btn btn-success mb-3" href="{% url 'usuarios:crear' %}">Nuevo usuario</a>
+<table class="table"><tr><th>Usuario</th><th>Nombre</th><th>Roles</th><th></th></tr>{% for usuario in usuarios %}<tr><td>{{ usuario.username }}</td><td>{{ usuario.get_full_name }}</td><td>{% for group in usuario.groups.all %}{{ group.name }} {% endfor %}</td><td><a href="{% url 'usuarios:editar' usuario.pk %}">Editar</a> <a href="{% url 'usuarios:eliminar' usuario.pk %}">Eliminar</a></td></tr>{% endfor %}</table>
+{% endblock %}

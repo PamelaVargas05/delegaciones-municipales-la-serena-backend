@@ -31,6 +31,14 @@ class SolicitudVecinal(models.Model):
         related_name='solicitudes_vecinales',
         verbose_name=_('delegación'),
     )
+    tipo_solicitud = models.ForeignKey(
+        'TipoSolicitud',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='solicitudes',
+        verbose_name='tipo de solicitud',
+    )
 
     class Meta:
         verbose_name = _('solicitud vecinal')
@@ -60,6 +68,36 @@ class Vecino(models.Model):
         return f'{self.nombre} ({self.rut})'
 
 
+class TipoSolicitud(models.Model):
+    nombre = models.CharField(max_length=150, unique=True)
+    descripcion = models.TextField(blank=True)
+    activo = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['nombre']
+        verbose_name = 'tipo de solicitud'
+        verbose_name_plural = 'tipos de solicitud'
+
+    def __str__(self):
+        return self.nombre
+
+
+class AtencionSolicitud(models.Model):
+    solicitud = models.ForeignKey(SolicitudVecinal, on_delete=models.CASCADE, related_name='atenciones')
+    usuario = models.ForeignKey(User, on_delete=models.PROTECT, related_name='atenciones_solicitudes')
+    descripcion = models.TextField()
+    estado = models.CharField(max_length=20, choices=SolicitudVecinal.Estado.choices)
+    fecha = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-fecha', '-id']
+        verbose_name = 'atención de solicitud'
+        verbose_name_plural = 'atenciones de solicitudes'
+
+    def __str__(self):
+        return f'{self.solicitud.folio} - {self.fecha:%d/%m/%Y %H:%M}'
+
+
 Solicitud = SolicitudVecinal
 
 class CodigoRecuperacion(models.Model):
@@ -74,4 +112,3 @@ class CodigoRecuperacion(models.Model):
     def generar_codigo(cls, user):
         codigo_num = f"{random.randint(100000, 999999)}"
         return cls.objects.create(user=user, codigo=codigo_num)
-

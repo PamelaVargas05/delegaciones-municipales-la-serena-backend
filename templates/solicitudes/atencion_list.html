@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block content %}<h1 class="h3">Historial de {{ solicitud.folio }}</h1>{% for atencion in atenciones %}<article class="card p-3 mb-2"><strong>{{ atencion.fecha }} - {{ atencion.usuario }}</strong><div>{{ atencion.descripcion }}</div><span>{{ atencion.get_estado_display }}</span></article>{% empty %}<p>No hay atenciones.</p>{% endfor %}{% endblock %}

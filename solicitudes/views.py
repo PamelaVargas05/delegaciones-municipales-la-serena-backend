@@ -6,8 +6,8 @@ from django.core.mail import send_mail
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from delegaciones.models import Delegacion
-from .forms import SolicitudVecinalForm
-from .models import CodigoRecuperacion, SolicitudVecinal
+from .forms import AtencionSolicitudForm, SolicitudVecinalForm, TipoSolicitudForm
+from .models import AtencionSolicitud, CodigoRecuperacion, SolicitudVecinal, TipoSolicitud
 from .models import Vecino
 from .forms import VecinoForm
 
@@ -70,6 +70,97 @@ def crear_solicitud(request):
     else:
         form = SolicitudVecinalForm()
     return render(request, 'solicitudes/solicitud_form.html', {'form': form})
+
+
+@login_required
+@permission_required('solicitudes.change_solicitudvecinal', raise_exception=True)
+def editar_solicitud(request, pk):
+    solicitud = get_object_or_404(SolicitudVecinal, pk=pk)
+    form = SolicitudVecinalForm(request.POST or None, instance=solicitud)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        messages.success(request, 'Solicitud actualizada correctamente.')
+        return redirect('solicitudes:detalle', pk=pk)
+    return render(request, 'solicitudes/solicitud_form.html', {'form': form})
+
+
+@login_required
+@permission_required('solicitudes.delete_solicitudvecinal', raise_exception=True)
+def eliminar_solicitud(request, pk):
+    solicitud = get_object_or_404(SolicitudVecinal, pk=pk)
+    if request.method == 'POST':
+        solicitud.delete()
+        messages.success(request, 'Solicitud eliminada correctamente.')
+        return redirect('solicitudes:lista')
+    return render(request, 'solicitudes/solicitud_confirm_delete.html', {'solicitud': solicitud})
+
+
+@login_required
+@permission_required('solicitudes.add_atencionsolicitud', raise_exception=True)
+def crear_atencion(request, pk):
+    solicitud = get_object_or_404(SolicitudVecinal, pk=pk)
+    form = AtencionSolicitudForm(request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        atencion = form.save(commit=False)
+        atencion.solicitud = solicitud
+        atencion.usuario = request.user
+        atencion.save()
+        solicitud.estado = atencion.estado
+        solicitud.save(update_fields=['estado'])
+        messages.success(request, 'Atención registrada correctamente.')
+        return redirect('solicitudes:detalle', pk=pk)
+    return render(request, 'solicitudes/atencion_form.html', {'form': form, 'solicitud': solicitud})
+
+
+@login_required
+@permission_required('solicitudes.view_atencionsolicitud', raise_exception=True)
+def historial_atenciones(request, pk):
+    solicitud = get_object_or_404(SolicitudVecinal, pk=pk)
+    return render(request, 'solicitudes/atencion_list.html', {
+        'solicitud': solicitud,
+        'atenciones': solicitud.atenciones.select_related('usuario'),
+    })
+
+
+@login_required
+@permission_required('solicitudes.view_tiposolicitud', raise_exception=True)
+def lista_tipos(request):
+    query = request.GET.get('q', '')
+    tipos = TipoSolicitud.objects.all()
+    if query:
+        tipos = tipos.filter(nombre__icontains=query)
+    return render(request, 'solicitudes/tipo_list.html', {'tipos': tipos, 'query': query})
+
+
+@login_required
+@permission_required('solicitudes.add_tiposolicitud', raise_exception=True)
+def crear_tipo(request):
+    form = TipoSolicitudForm(request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        return redirect('solicitudes:lista_tipos')
+    return render(request, 'solicitudes/tipo_form.html', {'form': form, 'titulo': 'Nuevo tipo de solicitud'})
+
+
+@login_required
+@permission_required('solicitudes.change_tiposolicitud', raise_exception=True)
+def editar_tipo(request, pk):
+    tipo = get_object_or_404(TipoSolicitud, pk=pk)
+    form = TipoSolicitudForm(request.POST or None, instance=tipo)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        return redirect('solicitudes:lista_tipos')
+    return render(request, 'solicitudes/tipo_form.html', {'form': form, 'titulo': 'Editar tipo de solicitud'})
+
+
+@login_required
+@permission_required('solicitudes.delete_tiposolicitud', raise_exception=True)
+def eliminar_tipo(request, pk):
+    tipo = get_object_or_404(TipoSolicitud, pk=pk)
+    if request.method == 'POST':
+        tipo.delete()
+        return redirect('solicitudes:lista_tipos')
+    return render(request, 'solicitudes/tipo_confirm_delete.html', {'tipo': tipo})
 
 
 

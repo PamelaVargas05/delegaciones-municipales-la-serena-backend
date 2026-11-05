@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block content %}<h1 class="h3">Eliminar solicitud</h1><form method="post">{% csrf_token %}<p>¿Eliminar {{ solicitud }}?</p><button class="btn btn-danger">Confirmar</button></form>{% endblock %}

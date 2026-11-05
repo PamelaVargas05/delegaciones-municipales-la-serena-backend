@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
-from .models import Delegacion
-from .forms import DelegacionForm
+from .models import Delegacion, Meta
+from .forms import DelegacionForm, MetaForm
 
 @login_required
 @permission_required('delegaciones.view_delegacion', raise_exception=True)
@@ -50,3 +50,47 @@ def eliminar_delegacion(request, pk):
         messages.success(request, 'Delegación eliminada con éxito.')
         return redirect('delegaciones:lista_delegaciones')
     return render(request, 'delegaciones/delegacion_confirm_delete.html', {'delegacion': delegacion})
+
+
+@login_required
+@permission_required('delegaciones.view_meta', raise_exception=True)
+def lista_metas(request):
+    query = request.GET.get('q', '')
+    metas = Meta.objects.select_related('delegacion')
+    if query:
+        metas = metas.filter(titulo__icontains=query)
+    return render(request, 'delegaciones/meta_list.html', {'metas': metas, 'query': query})
+
+
+@login_required
+@permission_required('delegaciones.add_meta', raise_exception=True)
+def crear_meta(request):
+    form = MetaForm(request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        messages.success(request, 'Meta creada correctamente.')
+        return redirect('delegaciones:lista_metas')
+    return render(request, 'delegaciones/meta_form.html', {'form': form, 'titulo': 'Nueva Meta'})
+
+
+@login_required
+@permission_required('delegaciones.change_meta', raise_exception=True)
+def editar_meta(request, pk):
+    meta = get_object_or_404(Meta, pk=pk)
+    form = MetaForm(request.POST or None, instance=meta)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        messages.success(request, 'Meta actualizada correctamente.')
+        return redirect('delegaciones:lista_metas')
+    return render(request, 'delegaciones/meta_form.html', {'form': form, 'titulo': 'Editar Meta'})
+
+
+@login_required
+@permission_required('delegaciones.delete_meta', raise_exception=True)
+def eliminar_meta(request, pk):
+    meta = get_object_or_404(Meta, pk=pk)
+    if request.method == 'POST':
+        meta.delete()
+        messages.success(request, 'Meta eliminada correctamente.')
+        return redirect('delegaciones:lista_metas')
+    return render(request, 'delegaciones/meta_confirm_delete.html', {'meta': meta})
