@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg municipal-navbar">
-        <div class="container-xl px-3 px-md-4">
+    <nav class="navbar navbar-expand-xl municipal-navbar">
+        <div class="container-fluid px-3 px-xl-4">
             <a class="navbar-brand d-flex align-items-center gap-3" href="{% url 'dashboard' %}">
                 <span class="brand-mark" aria-hidden="true">⌂</span>
                 <span><strong>Unidad de Delegaciones Municipales</strong><small>La Serena</small></span>
@@ -20,7 +20,7 @@
             </button>
             <div class="collapse navbar-collapse" id="mainNav">
                 {% if request.user.is_authenticated %}
-                <div class="navbar-nav ms-auto align-items-lg-center">
+                <div class="navbar-nav ms-auto align-items-xl-center">
                     <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
                     {% if perms.solicitudes.view_solicitudvecinal %}<a class="nav-link" href="{% url 'solicitudes:lista' %}">Solicitudes</a>{% endif %}
                     {% if perms.solicitudes.add_solicitudvecinal %}<a class="nav-link" href="{% url 'solicitudes:crear' %}">Nueva solicitud</a>{% endif %}
@@ -29,11 +29,21 @@
                     {% if perms.solicitudes.view_tiposolicitud %}<a class="nav-link" href="{% url 'solicitudes:lista_tipos' %}">Tipos</a>{% endif %}
                     {% if perms.delegaciones.view_meta %}<a class="nav-link" href="{% url 'delegaciones:lista_metas' %}">Metas</a>{% endif %}
                     {% if perms.auth.view_user %}<a class="nav-link" href="{% url 'usuarios:lista' %}">Usuarios</a>{% endif %}
-                    <span class="navbar-text text-white small ms-lg-3">Hola, {{ request.user.username }}</span>
-                    <form method="post" action="{% url 'logout' %}" class="d-inline ms-lg-2">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-outline-light btn-sm">Cerrar sesión</button>
-                    </form>
+                    <div class="dropdown user-menu ms-xl-2">
+                        <button class="btn user-menu-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ request.user.get_full_name|default:request.user.username }}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li class="px-3 py-2"><span class="small text-muted">Sesión iniciada como</span><br><strong>{{ request.user.username }}</strong></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form method="post" action="{% url 'logout' %}" class="px-3">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-primary btn-sm w-100">Cerrar sesión</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
                 {% endif %}
             </div>

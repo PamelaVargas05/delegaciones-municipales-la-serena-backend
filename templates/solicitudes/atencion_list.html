@@ -1,1 +1,40 @@
-{% extends 'base.html' %}{% block content %}<h1 class="h3">Historial de {{ solicitud.folio }}</h1>{% for atencion in atenciones %}<article class="card p-3 mb-2"><strong>{{ atencion.fecha }} - {{ atencion.usuario }}</strong><div>{{ atencion.descripcion }}</div><span>{{ atencion.get_estado_display }}</span></article>{% empty %}<p>No hay atenciones.</p>{% endfor %}{% endblock %}
+{% extends 'base.html' %}
+
+{% block title %}Historial de atenciones | {{ solicitud.folio }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <div class="page-eyebrow">Seguimiento de solicitud</div>
+        <h1 class="page-title">Historial de atenciones</h1>
+        <p class="page-subtitle">Solicitud {{ solicitud.folio }} · Seguimiento registrado para esta solicitud.</p>
+    </div>
+    <div class="page-actions">
+        <a href="{% url 'solicitudes:detalle' solicitud.pk %}" class="btn btn-outline-secondary">← Volver a la solicitud</a>
+        <a href="{% url 'solicitudes:lista' %}" class="btn btn-link">Volver a Solicitudes</a>
+    </div>
+</div>
+
+<section class="section-card">
+    {% for atencion in atenciones %}
+    <article class="attention-card">
+        <div class="attention-meta">
+            <span><i class="bi bi-calendar3 me-1"></i>{{ atencion.fecha|date:"j \d\e F \d\e Y · H:i" }}</span>
+            <span><i class="bi bi-person me-1"></i>{{ atencion.usuario.get_full_name|default:atencion.usuario.username }}</span>
+        </div>
+        <div class="row g-3">
+            <div class="col-md-9">
+                <div class="detail-label">Descripción</div>
+                <p class="mb-0">{{ atencion.descripcion|linebreaksbr }}</p>
+            </div>
+            <div class="col-md-3">
+                <div class="detail-label">Estado resultante</div>
+                <span class="badge badge-status {% if atencion.estado == 'Pendiente' %}status-pendiente{% elif atencion.estado == 'En Proceso' %}status-proceso{% elif atencion.estado == 'Resuelto' %}status-resuelto{% endif %}">{{ atencion.get_estado_display }}</span>
+            </div>
+        </div>
+    </article>
+    {% empty %}
+    <div class="alert alert-light border mb-0">No existen atenciones registradas para esta solicitud.</div>
+    {% endfor %}
+</section>
+{% endblock %}
