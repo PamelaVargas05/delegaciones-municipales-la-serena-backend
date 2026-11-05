@@ -10,7 +10,20 @@ from .forms import UsuarioForm
 
 @login_required
 def dashboard(request):
+    if request.user.is_superuser:
+        rol = 'Administrador'
+    else:
+        nombres_roles = ('Administrador', 'Supervisor', 'Administrativo')
+        rol = (
+            request.user.groups.filter(name__in=nombres_roles)
+            .order_by('name')
+            .values_list('name', flat=True)
+            .first()
+            or 'Administrativo'
+        )
     context = {
+        'rol': rol,
+        'nombre_usuario': request.user.get_full_name() or request.user.username,
         'delegaciones_count': Delegacion.objects.count(),
         'solicitudes_count': SolicitudVecinal.objects.count(),
         'pendientes_count': SolicitudVecinal.objects.filter(

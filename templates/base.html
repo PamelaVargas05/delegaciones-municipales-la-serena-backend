@@ -19,15 +19,23 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="mainNav">
-                <div class="navbar-nav ms-auto">
-                    <a class="nav-link" href="{% url 'solicitudes:lista' %}">Solicitudes</a>
-                    <a class="nav-link" href="{% url 'solicitudes:crear' %}">Nueva solicitud</a>
-                    <a class="nav-link" href="{% url 'delegaciones:lista_delegaciones' %}">Delegaciones</a>
-                    <a class="nav-link" href="{% url 'solicitudes:lista_vecinos' %}">Vecinos</a>
-                    <a class="nav-link" href="{% url 'solicitudes:lista_tipos' %}">Tipos</a>
-                    <a class="nav-link" href="{% url 'delegaciones:lista_metas' %}">Metas</a>
+                {% if request.user.is_authenticated %}
+                <div class="navbar-nav ms-auto align-items-lg-center">
+                    <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+                    {% if perms.solicitudes.view_solicitudvecinal %}<a class="nav-link" href="{% url 'solicitudes:lista' %}">Solicitudes</a>{% endif %}
+                    {% if perms.solicitudes.add_solicitudvecinal %}<a class="nav-link" href="{% url 'solicitudes:crear' %}">Nueva solicitud</a>{% endif %}
+                    {% if perms.delegaciones.view_delegacion %}<a class="nav-link" href="{% url 'delegaciones:lista_delegaciones' %}">Delegaciones</a>{% endif %}
+                    {% if perms.solicitudes.view_vecino %}<a class="nav-link" href="{% url 'solicitudes:lista_vecinos' %}">Vecinos</a>{% endif %}
+                    {% if perms.solicitudes.view_tiposolicitud %}<a class="nav-link" href="{% url 'solicitudes:lista_tipos' %}">Tipos</a>{% endif %}
+                    {% if perms.delegaciones.view_meta %}<a class="nav-link" href="{% url 'delegaciones:lista_metas' %}">Metas</a>{% endif %}
                     {% if perms.auth.view_user %}<a class="nav-link" href="{% url 'usuarios:lista' %}">Usuarios</a>{% endif %}
+                    <span class="navbar-text text-white small ms-lg-3">Hola, {{ request.user.username }}</span>
+                    <form method="post" action="{% url 'logout' %}" class="d-inline ms-lg-2">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-light btn-sm">Cerrar sesión</button>
+                    </form>
                 </div>
+                {% endif %}
             </div>
         </div>
     </nav>

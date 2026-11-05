@@ -1,4 +1,41 @@
-{% extends 'base.html' %}{% block content %}
-<h1 class="h3 mb-4">Dashboard{% if user.groups.all %} - {{ user.groups.all.0.name }}{% endif %}</h1>
-<div class="row g-3"><div class="col-md-4"><div class="card p-3">Delegaciones: <strong>{{ delegaciones_count }}</strong></div></div><div class="col-md-4"><div class="card p-3">Solicitudes: <strong>{{ solicitudes_count }}</strong></div></div><div class="col-md-4"><div class="card p-3">Pendientes: <strong>{{ pendientes_count }}</strong></div></div></div>
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | Unidad de Delegaciones Municipales{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <div class="page-eyebrow">Unidad de Delegaciones Municipales</div>
+        <h1 class="page-title">Dashboard</h1>
+        <p class="page-subtitle mb-1">Bienvenido/a, {{ nombre_usuario }}</p>
+        <span class="badge text-bg-light">Perfil: {{ rol }}</span>
+    </div>
+</div>
+
+{% if rol == 'Administrador' %}
+<div class="mb-4"><h2 class="h3 mb-1">Panel de Administración</h2><p class="page-subtitle">Gestión general de la Unidad de Delegaciones Municipales.</p></div>
+{% elif rol == 'Supervisor' %}
+<div class="mb-4"><h2 class="h3 mb-1">Panel de Supervisión</h2><p class="page-subtitle">Seguimiento y control de la gestión operacional.</p></div>
+{% else %}
+<div class="mb-4"><h2 class="h3 mb-1">Panel Administrativo</h2><p class="page-subtitle">Registro y consulta de operaciones municipales.</p></div>
+{% endif %}
+
+<div class="row g-3 mb-5">
+    {% if perms.solicitudes.view_solicitudvecinal %}<div class="col-sm-6 col-lg-4"><div class="card border-0 shadow-sm h-100"><div class="card-body"><div class="detail-label">Solicitudes totales</div><div class="display-6 fw-bold text-primary">{{ solicitudes_count }}</div></div></div></div>{% endif %}
+    {% if perms.solicitudes.view_solicitudvecinal %}<div class="col-sm-6 col-lg-4"><div class="card border-0 shadow-sm h-100"><div class="card-body"><div class="detail-label">Solicitudes pendientes</div><div class="display-6 fw-bold text-primary">{{ pendientes_count }}</div></div></div></div>{% endif %}
+    {% if perms.delegaciones.view_delegacion %}<div class="col-sm-6 col-lg-4"><div class="card border-0 shadow-sm h-100"><div class="card-body"><div class="detail-label">Delegaciones</div><div class="display-6 fw-bold text-primary">{{ delegaciones_count }}</div></div></div></div>{% endif %}
+</div>
+
+<section class="section-card">
+    <div class="mb-4"><h2 class="h4 mb-1">Accesos rápidos</h2><p class="page-subtitle mb-0">Accede a las funciones disponibles para tu perfil.</p></div>
+    <div class="row g-3">
+        {% if perms.solicitudes.view_solicitudvecinal %}<div class="col-sm-6 col-lg-4"><a class="btn btn-outline-primary w-100 text-start p-3" href="{% url 'solicitudes:lista' %}"><i class="bi bi-list-task me-2"></i>Solicitudes</a></div>{% endif %}
+        {% if perms.solicitudes.add_solicitudvecinal %}<div class="col-sm-6 col-lg-4"><a class="btn btn-success w-100 text-start p-3" href="{% url 'solicitudes:crear' %}"><i class="bi bi-plus-circle me-2"></i>Nueva solicitud</a></div>{% endif %}
+        {% if perms.delegaciones.view_delegacion %}<div class="col-sm-6 col-lg-4"><a class="btn btn-outline-primary w-100 text-start p-3" href="{% url 'delegaciones:lista_delegaciones' %}"><i class="bi bi-building me-2"></i>Delegaciones</a></div>{% endif %}
+        {% if perms.solicitudes.view_vecino %}<div class="col-sm-6 col-lg-4"><a class="btn btn-outline-primary w-100 text-start p-3" href="{% url 'solicitudes:lista_vecinos' %}"><i class="bi bi-people me-2"></i>Vecinos</a></div>{% endif %}
+        {% if perms.solicitudes.view_tiposolicitud %}<div class="col-sm-6 col-lg-4"><a class="btn btn-outline-primary w-100 text-start p-3" href="{% url 'solicitudes:lista_tipos' %}"><i class="bi bi-tags me-2"></i>Tipos de Solicitud</a></div>{% endif %}
+        {% if perms.delegaciones.view_meta %}<div class="col-sm-6 col-lg-4"><a class="btn btn-outline-primary w-100 text-start p-3" href="{% url 'delegaciones:lista_metas' %}"><i class="bi bi-graph-up me-2"></i>Metas</a></div>{% endif %}
+        {% if perms.auth.view_user %}<div class="col-sm-6 col-lg-4"><a class="btn btn-outline-primary w-100 text-start p-3" href="{% url 'usuarios:lista' %}"><i class="bi bi-person-gear me-2"></i>Usuarios</a></div>{% endif %}
+    </div>
+</section>
 {% endblock %}
